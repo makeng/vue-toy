@@ -16,7 +16,7 @@ function defineReactive(data, key, val) {
       }
       val = newVal
       dep.notify()
-      console.log('set___', val)
+      console.log('set', val)
     },
     get() {
       console.log('get', val)
@@ -26,6 +26,7 @@ function defineReactive(data, key, val) {
   })
 }
 
+console.log(123)
 const vue = {}
 defineReactive(vue, 'watcher', 'old')
 vue.watcher = 'change'

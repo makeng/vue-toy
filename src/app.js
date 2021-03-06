@@ -1,14 +1,9 @@
 /* ---------------------------------------------------------------------------------------
-* about:总出口
+* about:总入口
 * author:马兆铿（13790371603 810768333@qq.com）
 * date:2021-03-06
 * ---------------------------------------------------------------------------------------- */
 
-require('babel-register') ({
-  presets: [ 'env' ]
-})
-module.exports = require('./src/app.js')
+import vue from './vue'
 
-if (module.hot) {
-  module.hot.accept();
-}
+console.log(123)

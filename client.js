@@ -7,5 +7,8 @@
 require('babel-register') ({
   presets: [ 'env' ]
 })
+module.exports = require('./src/core/index.js')
 
-module.exports = require('./core/index.js')
+if (module.hot) {
+  module.hot.accept();
+}

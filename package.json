@@ -1,15 +1,21 @@
 {
-  "name": "vue-toy",
-  "version": "0.0.0",
+  "name": "webpack-hot-middleware-example",
+  "version": "1.0.0",
+  "description": "Example of using webpack-hot-middleware",
+  "author": "Glen Mailer <glen@stainlessed.co.uk>",
+  "license": "MIT",
   "scripts": {
-    "dev": "webpack serve --open --mode development",
-    "build": "webpack"
+    "start": "WEBPACK_CONFIG=./webpack.config.js node server.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2"
+    "console-stamp": "^0.2.9",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "webpack": "^4.46.0",
+    "webpack-dev-middleware": "^3.7.3",
+    "webpack-hot-middleware": "^2.25.0"
   }
 }

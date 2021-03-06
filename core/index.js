@@ -3,8 +3,10 @@
 * author:马兆铿（13790371603 810768333@qq.com）
 * date:2021-03-04
 * ---------------------------------------------------------------------------------------- */
+import Dep from "./Dep";
 
 function defineReactive(data, key, val) {
+  const dep = new Dep() // 变化收集器
   Object.defineProperty(data, key, {
     configurable: true,
     enumerable: true,
@@ -13,10 +15,12 @@ function defineReactive(data, key, val) {
         return
       }
       val = newVal
-      console.log('set', val)
+      dep.notify()
+      console.log('set___', val)
     },
     get() {
       console.log('get', val)
+      dep.depend()
       return val
     }
   })
@@ -24,5 +28,4 @@ function defineReactive(data, key, val) {
 
 const vue = {}
 defineReactive(vue, 'watcher', 'old')
-vue.watcher // get
 vue.watcher = 'change'

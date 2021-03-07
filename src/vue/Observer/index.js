@@ -3,7 +3,26 @@
 * author:马兆铿（13790371603 810768333@qq.com）
 * date:2021-03-07
 * ---------------------------------------------------------------------------------------- */
-import Dep from './Dep'
+import Dep from '../Dep'
+import { arrayMethods } from './array'
+import { HAS_PROTO } from '../../utils/env'
+
+/**
+ * Augment a target Object or Array by intercepting
+ */
+function protoAugment (target, src) {
+  target.__proto__ = src
+}
+
+/**
+ * 没有 __proto__ 的，直接把方法挂载到目标上作为属性
+ */
+function copyAugment (target, src, keys) {
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    target[key] = src[key]
+  }
+}
 
 /**
  * 创建 getter/setter
@@ -42,7 +61,12 @@ class Observer {
   constructor (value) {
     this.value = value
     // 如果是数组，用别的处理方式
-    if (!Array.isArray(value)) {
+    if (Array.isArray(value)) {
+      const augment = HAS_PROTO
+        ? protoAugment
+        : copyAugment
+      augment(value, arrayMethods, Object.getOwnPropertyNames(arrayMethods))
+    } else {
       this.walk(value)
     }
   }

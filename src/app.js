@@ -6,4 +6,4 @@
 
 import vue from './vue'
 
-console.log(123)
+vue.mount('app')

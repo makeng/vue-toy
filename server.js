@@ -1,10 +1,10 @@
-var http = require('http');
+var http = require('http')
 
-var express = require('express');
+var express = require('express')
 
-require('console-stamp')(console, 'HH:MM:ss.l');
+require('console-stamp')(console, 'HH:MM:ss.l')
 
-var app = express();
+var app = express()
 
 app.use(require('morgan')('short'));
 
@@ -13,11 +13,11 @@ app.use(require('morgan')('short'));
 // ************************************
 (function () {
   // Step 1: Create & configure a webpack compiler
-  var webpack = require('webpack');
+  var webpack = require('webpack')
   var webpackConfig = require(process.env.WEBPACK_CONFIG
     ? process.env.WEBPACK_CONFIG
-    : './webpack.config');
-  var compiler = webpack(webpackConfig);
+    : './webpack.config')
+  var compiler = webpack(webpackConfig)
 
   // Step 2: Attach the dev middleware to the compiler & the server
   app.use(
@@ -25,7 +25,7 @@ app.use(require('morgan')('short'));
       logLevel: 'warn',
       publicPath: webpackConfig.output.publicPath,
     })
-  );
+  )
 
   // Step 3: Attach the hot middleware to the compiler & the server
   app.use(
@@ -34,18 +34,26 @@ app.use(require('morgan')('short'));
       path: '/__webpack_hmr',
       heartbeat: 10 * 1000,
     })
-  );
-})();
+  )
+})()
+
+// ico file
+app.use(function (req, res, next) {
+  if (req.originalUrl && req.originalUrl.split('/').pop() === 'favicon.ico') {
+    return res.sendStatus(204)
+  }
+  return next()
+})
+
 
 // Do anything you like with the rest of your express application.
-
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
-});
+  res.sendFile(__dirname + '/index.html')
+})
 
 if (require.main === module) {
-  var server = http.createServer(app);
-  server.listen(process.env.PORT || 1616, "localhost", function () {
-    console.log('Listening on %j', server.address());
-  });
+  var server = http.createServer(app)
+  server.listen(process.env.PORT || 1616, 'localhost', function () {
+    console.log('Listening on %j', server.address())
+  })
 }

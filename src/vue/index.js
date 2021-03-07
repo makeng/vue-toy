@@ -26,8 +26,18 @@ function defineReactive (data, key, val) {
   })
 }
 
+/**
+ * 安装在元素上
+ * @param id
+ */
+function mount (id) {
+  const ele = document.getElementById(id)
+  ele.innerHTML = '<h1>vue-toy</h1>'
+}
+
 const vue = {
-  defineReactive
+  defineReactive,
+  mount
 }
 
 export default vue

@@ -30,6 +30,7 @@ class Dep {
     remove(this.subs, sub)
   }
 
+  // 依赖收集
   depend() {
     if (window.target) {
       this.addSub(window.target)

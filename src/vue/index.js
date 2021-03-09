@@ -21,10 +21,9 @@ class Vue {
         </div>
     `)
     // 模板字符换成数据
-    const keys = Object.getOwnPropertyNames(data)
-    keys.forEach(key => {
+    for (let key in data) {
       tmplStr = tmplStr.replace(`{{${key}}}`, data[key])
-    })
+    }
 
     return tmplStr
   }
@@ -46,8 +45,4 @@ class Vue {
   }
 }
 
-const vue = new Vue()
-vue.mount('app')
-console.log(vue)
-
-export default vue
+export default Vue

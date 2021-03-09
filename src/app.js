@@ -4,6 +4,7 @@
 * date:2021-03-06
 * ---------------------------------------------------------------------------------------- */
 
-import vue from './vue'
+import Vue from './vue'
 
+const vue = new Vue()
 vue.mount('app')

@@ -32,7 +32,6 @@ function copyAugment (target, src, keys) {
  * @returns {*}
  */
 function defineReactive (data, key, val) {
-  console.log(data)
   // 递归属性，进行观察
 /*  if (typeof data === 'object') {
     new Observer(data)

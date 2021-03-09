@@ -7,7 +7,6 @@
   "scripts": {
     "start": "WEBPACK_CONFIG=./webpack.config.js node server.js"
   },
-  "type": "module",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",

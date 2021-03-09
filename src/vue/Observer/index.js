@@ -32,10 +32,11 @@ function copyAugment (target, src, keys) {
  * @returns {*}
  */
 function defineReactive (data, key, val) {
+  console.log(data)
   // 递归属性，进行观察
-  if (typeof data === 'object') {
+/*  if (typeof data === 'object') {
     new Observer(data)
-  }
+  }*/
 
   // 挂载
   const dep = new Dep() // 变化收集器
@@ -47,10 +48,12 @@ function defineReactive (data, key, val) {
         return
       }
       val = newVal
+      console.log('setter', val)
       dep.notify()
     },
     get () {
       dep.depend()
+      console.log('getter', val)
       return val
     }
   })
@@ -60,6 +63,8 @@ function defineReactive (data, key, val) {
 class Observer {
   constructor (value) {
     this.value = value
+    // this.dep = new Dep() // 数组专供
+
     // 如果是数组，用别的处理方式
     if (Array.isArray(value)) {
       const augment = HAS_PROTO
@@ -77,6 +82,7 @@ class Observer {
     for (let i = 0; i < keys.length; i++) { // 深度只有一层
       const key = keys[i]
       defineReactive(obj, key, obj[key])
+      console.log('walk', key)
     }
   }
 }

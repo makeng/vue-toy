@@ -6,24 +6,21 @@
 import Observer from './Observer'
 
 class Vue {
-  constructor () {
-    const data = this.data()
-    new Observer(data)
-    this.data = data
+  constructor ({ data, ...conf }) {
+    // 初始化
+    this.data = data()
+    Object.assign(this, conf)
+    // 监听
+    new Observer(this.data)
   }
 
-  template () {
-    const { data } = this
-    let tmplStr = (`
-        <div>
-          <h3>{{name}}</h3>
-          <p>{{day}}</p>
-          <p>{{time.hour}} : {{time.min}}</p>
-        </div>
-    `)
+  render () {
+    let { data, template } = this
+    // 模板替换
     const replaceTmpl = (tmpl, value) => {
-      tmplStr = tmplStr.replace(tmpl, value)
+      template = template.replace(tmpl, value)
     }
+
     // 模板字符换成数据
     for (let key in data) {
       const item = data[key]
@@ -38,18 +35,7 @@ class Vue {
       }
     }
 
-    return tmplStr
-  }
-
-  data () {
-    return {
-      name: 'vue-shrime',
-      day: 'Monday',
-      time: {
-        hour: 12,
-        min: 25,
-      }
-    }
+    return template
   }
 
   /**
@@ -58,7 +44,8 @@ class Vue {
    */
   mount (id) {
     const ele = document.getElementById(id)
-    ele.innerHTML = this.template()
+    ele.innerHTML = this.render()
+    this.mounted && this.mounted()
   }
 }
 

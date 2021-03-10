@@ -33,9 +33,9 @@ function copyAugment (target, src, keys) {
  */
 function defineReactive (data, key, val) {
   // 递归属性，进行观察
-/*  if (typeof data === 'object') {
-    new Observer(data)
-  }*/
+  if (typeof val === 'object') {
+    new Observer(val)
+  }
 
   // 挂载
   const dep = new Dep() // 变化收集器
@@ -81,7 +81,6 @@ class Observer {
     for (let i = 0; i < keys.length; i++) { // 深度只有一层
       const key = keys[i]
       defineReactive(obj, key, obj[key])
-      console.log('walk', key)
     }
   }
 }

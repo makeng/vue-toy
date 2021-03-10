@@ -17,12 +17,25 @@ class Vue {
     let tmplStr = (`
         <div>
           <h3>{{name}}</h3>
-          <p>{{time}}</p>
+          <p>{{day}}</p>
+          <p>{{time.hour}} : {{time.min}}</p>
         </div>
     `)
+    const replaceTmpl = (tmpl, value) => {
+      tmplStr = tmplStr.replace(tmpl, value)
+    }
     // 模板字符换成数据
     for (let key in data) {
-      tmplStr = tmplStr.replace(`{{${key}}}`, data[key])
+      const item = data[key]
+      // 常量
+      if (!(typeof item === 'object')) {
+        replaceTmpl(`{{${key}}}`, item)
+      } else {
+        // 对象
+        for (let itemKey in item) {
+          replaceTmpl(`{{${key}.${itemKey}}}`, item[itemKey])
+        }
+      }
     }
 
     return tmplStr
@@ -31,7 +44,11 @@ class Vue {
   data () {
     return {
       name: 'vue-shrime',
-      time: 0
+      day: 'Monday',
+      time: {
+        hour: 12,
+        min: 25,
+      }
     }
   }
 

@@ -4,14 +4,22 @@
 * date:2021-03-04
 * ---------------------------------------------------------------------------------------- */
 import Observer from './Observer'
+import Watcher from './Watcher'
 
 class Vue {
   constructor ({ data, ...conf }) {
+    const { template } = conf
+
     // 初始化
+    this.ele = undefined
     this.data = data()
     Object.assign(this, conf)
-    // 监听
+    // 监听数据
     new Observer(this.data)
+    // 收集监听
+    new Watcher(this, 'data.time', (vm, value) => {
+      this.render()
+    })
   }
 
   render () {
@@ -35,7 +43,7 @@ class Vue {
       }
     }
 
-    return template
+    this.ele.innerHTML = template
   }
 
   /**
@@ -43,8 +51,8 @@ class Vue {
    * @param id
    */
   mount (id) {
-    const ele = document.getElementById(id)
-    ele.innerHTML = this.render()
+    this.ele = document.getElementById(id)
+    this.render()
     this.mounted && this.mounted()
   }
 }

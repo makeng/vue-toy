@@ -12,7 +12,7 @@ const vue = new Vue({
       <div>
         <h3>{{name}}</h3>
         <p>{{day}}</p>
-        <p>{{time.hour}} : {{time.min}}</p>
+        <p>{{time.min}} : {{time.sec}}</p>
       </div>
     `,
   data () {
@@ -20,7 +20,7 @@ const vue = new Vue({
       name: 'vue-shrime',
       day: 'Monday',
       time: {
-        hour: '00',
+        sec: '00',
         min: '00',
       }
     }
@@ -32,12 +32,12 @@ const vue = new Vue({
   timeUpdate () {
     const getTime = () => {
       const date = new Date()
-      const hour = date.getHours()    // 获取当前小时数(0-23)
-      const min = date.getMinutes()   // 获取当前分钟数(0-59)
-      this.data.time.hour = hour
-      this.data.time.min = min
-      console.log('time update')
+      const min = date.getMinutes()    // 获取当前小时数(0-23)
+      const sec = date.getSeconds()      // 获取当前分钟数(0-59)
+
+      this.data.time = { min, sec }
     }
+
     setInterval(() => getTime(), 1000)
   }
 })

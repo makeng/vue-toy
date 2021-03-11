@@ -32,6 +32,7 @@ function copyAugment (target, src, keys) {
  * @returns {*}
  */
 function defineReactive (data, key, val) {
+  console.log('defineReactive', key)
   // 递归属性，进行观察
   if (typeof val === 'object') {
     new Observer(val)
@@ -47,12 +48,10 @@ function defineReactive (data, key, val) {
         return
       }
       val = newVal
-      console.log('setter', val)
       dep.notify()
     },
     get () {
       dep.depend()
-      console.log('getter', val)
       return val
     }
   })

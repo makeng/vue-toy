@@ -32,8 +32,8 @@ class Dep {
 
   // 依赖收集
   depend() {
-    if (window.target) {
-      this.addSub(window.target)
+    if (window.target) { // 如果是 watcher 的 getter
+      this.addSub(window.target) // watcher 进入 subs
     }
   }
 
@@ -41,6 +41,7 @@ class Dep {
     const subs = this.subs.slice() // copy
     for (let i = 0; i < subs.length; i++) {
       subs[i].update()
+      this.removeSub(subs[i])
     }
   }
 }

@@ -4,6 +4,7 @@
 * date:2021-03-05
 * ---------------------------------------------------------------------------------------- */
 import { parsePath } from '../utils/string'
+import Dep from './Dep'
 
 class Watcher {
   /**
@@ -12,24 +13,51 @@ class Watcher {
    * @param cb
    */
   constructor (vm, expOrFn, cb) {
+    console.log('create Watcher')
     this.vm = vm
     this.cb = cb
+    this.deps = []
+    this.depIds = []
+    this.newDepIds = []
     this.getter = parsePath(expOrFn) // this.getter() 读取 data 的内容
     this.value = this.get()
   }
 
   get () {
-    window.target = this
+    Dep.target = this
     const value = this.getter.call(this.vm, this.vm) // 唤起 getter
-    window.target = undefined
+    console.log('watcher get', value)
+    Dep.target = undefined
+
+    this.cleanupDeps()
     return value
   }
 
   update () {
+    console.log('Watcher update')
     const oldValue = this.value
     this.value = this.get()
+    console.log('cb')
     if (this.cb) {
       this.cb.call(this.vm, this.value, oldValue)
+    }
+  }
+
+  addDep (dep) {
+    const { id } = dep
+    if (!this.depIds.includes(id)) {
+      this.deps.push(dep)
+      this.depIds.push(id)
+      dep.addSub(this)
+    }
+  }
+
+  // 清空所有依赖
+  cleanupDeps () {
+    let i = this.deps.length
+    while (i--) {
+      const dep = this.deps[i]
+      // dep.removeSub(this)
     }
   }
 }

@@ -52,7 +52,6 @@ function defineReactive (data, key, val) {
     },
     get () {
       dep.depend()
-      console.log('getter')
       return val
     }
   })

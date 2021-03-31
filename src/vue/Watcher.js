@@ -13,12 +13,12 @@ class Watcher {
    * @param cb
    */
   constructor (vm, expOrFn, cb) {
-    console.log('create Watcher')
     this.vm = vm
     this.cb = cb
+    this.depIds = new Set()
+    this.newDepIds = new Set()
     this.deps = []
-    this.depIds = []
-    this.newDepIds = []
+    this.newDeps = []
     this.getter = parsePath(expOrFn) // this.getter() 读取 data 的内容
     this.value = this.get()
   }
@@ -26,7 +26,6 @@ class Watcher {
   get () {
     Dep.target = this
     const value = this.getter.call(this.vm, this.vm) // 唤起 getter
-    console.log('watcher get', value)
     Dep.target = undefined
 
     this.cleanupDeps()
@@ -34,10 +33,8 @@ class Watcher {
   }
 
   update () {
-    console.log('Watcher update')
     const oldValue = this.value
     this.value = this.get()
-    console.log('cb')
     if (this.cb) {
       this.cb.call(this.vm, this.value, oldValue)
     }
@@ -45,20 +42,38 @@ class Watcher {
 
   addDep (dep) {
     const { id } = dep
-    if (!this.depIds.includes(id)) {
-      this.deps.push(dep)
-      this.depIds.push(id)
-      dep.addSub(this)
+    if (!this.newDepIds.has(id)) {
+      this.newDepIds.add(id)
+      this.newDeps.push(dep)
+      // 备份
+      if (!this.depIds.has(id)) {
+        dep.addSub(this)
+      }
     }
+    console.log('Watcher newDepIds', this.newDepIds)
+    console.log('Watcher depIds', this.depIds)
   }
 
   // 清空所有依赖
   cleanupDeps () {
     let i = this.deps.length
+    // 如果新的依赖数组不再包含老 dep，则通知 Dep 去掉当前 Watcher
     while (i--) {
       const dep = this.deps[i]
-      // dep.removeSub(this)
+      if (!this.newDepIds.has(dep.id)) {
+        dep.removeSub(this)
+      }
     }
+    // 更新 depsId
+    let tmp = this.depIds
+    this.depIds = this.newDepIds
+    this.newDepIds = tmp
+    this.newDepIds.clear()
+    // 更新 deps
+    tmp = this.newDeps
+    this.deps = tmp
+    this.newDeps = this.deps
+    this.newDeps.length = 0
   }
 }
 

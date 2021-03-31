@@ -36,9 +36,9 @@ class Dep {
 
   // 依赖收集
   depend () {
+    console.log('depend()')
     if (Dep.target) { // 如果是 watcher 的 getter
       Dep.target.addDep(this) // watcher 进入 subs
-      console.log('Watcher deps', Dep.target.deps)
     }
   }
 
@@ -46,7 +46,6 @@ class Dep {
     const subs = this.subs.slice() // copy
     for (let i = 0; i < subs.length; i++) {
       subs[i].update()
-      // this.removeSub(subs[i])
     }
   }
 }

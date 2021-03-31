@@ -31,7 +31,6 @@ class Vue {
     // 模板字符换成数据
     for (let key in data) {
       const item = this.data[key]
-      console.log(item)
       // 常量
       if (!(typeof item === 'object')) {
         replaceTmpl(`{{${key}}}`, item)

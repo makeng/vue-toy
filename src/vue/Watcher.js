@@ -50,8 +50,8 @@ class Watcher {
         dep.addSub(this)
       }
     }
-    console.log('Watcher newDepIds', this.newDepIds)
-    console.log('Watcher depIds', this.depIds)
+    const len = this.newDepIds.size
+    console.log('Watcher newDepIds', len)
   }
 
   // 清空所有依赖
@@ -74,6 +74,9 @@ class Watcher {
     this.deps = tmp
     this.newDeps = this.deps
     this.newDeps.length = 0
+
+    const len = this.depIds.size
+    console.log('Watcher dpeIds', len)
   }
 }
 

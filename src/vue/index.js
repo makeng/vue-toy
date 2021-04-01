@@ -20,6 +20,10 @@ class Vue {
     new Watcher(this, 'data.time', (vm, value) => {
       this.render()
     })
+    // 收集监听
+    new Watcher(this, 'data.count', (vm, value) => {
+      this.render()
+    })
   }
 
   render () {

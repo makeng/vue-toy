@@ -11,18 +11,18 @@ const vue = new Vue({
     `
       <div>
         <h3>{{name}}</h3>
-        <p>{{day}}</p>
-        <p>{{time.min}} : {{time.sec}}</p>
+        <p>count: {{count}}</p>
+        <p>time: {{time.min}} : {{time.sec}}</p>
       </div>
     `,
   data () {
     return {
       name: 'vue-shrime',
-      day: 'Monday',
+      count: 0,
       time: {
         sec: '00',
         min: '00',
-      }
+      },
     }
   },
   mounted () {
@@ -35,6 +35,7 @@ const vue = new Vue({
       const min = date.getMinutes()    // 获取当前小时数(0-23)
       const sec = date.getSeconds()      // 获取当前分钟数(0-59)
 
+      this.data.count +=1
       this.data.time = { min, sec }
     }
 

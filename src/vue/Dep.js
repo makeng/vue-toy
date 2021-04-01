@@ -36,7 +36,6 @@ class Dep {
 
   // 依赖收集
   depend () {
-    console.log('depend()')
     if (Dep.target) { // 如果是 watcher 的 getter
       Dep.target.addDep(this) // watcher 进入 subs
     }

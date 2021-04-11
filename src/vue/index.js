@@ -16,14 +16,15 @@ class Vue {
     Object.assign(this, conf)
     // 监听数据
     new Observer(this.data)
-    // 收集监听
-    new Watcher(this, 'data.time', (vm, value) => {
-      this.render()
-    })
-    // 收集监听
+    // 监听属性
     new Watcher(this, 'data.count', (vm, value) => {
       this.render()
     })
+    // 监听对象
+    new Watcher(this, 'data.time', (vm, value) => {
+      this.render()
+    })
+    // 监听组件
   }
 
   render () {

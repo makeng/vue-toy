@@ -19,8 +19,14 @@ class Watcher {
     this.newDepIds = new Set()
     this.deps = []
     this.newDeps = []
-    this.getter = parsePath(expOrFn) // this.getter() 读取 data 的内容
     this.value = this.get()
+
+    // parse expression for getter
+    if (typeof expOrFn === 'function') {
+      this.getter = expOrFn // for component
+    } else {
+      this.getter = parsePath(expOrFn) // for $watcher
+    }
   }
 
   get () {

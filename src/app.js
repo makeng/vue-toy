@@ -35,7 +35,7 @@ const vue = new Vue({
       const min = date.getMinutes()    // 获取当前小时数(0-23)
       const sec = date.getSeconds()      // 获取当前分钟数(0-59)
 
-      this.data.count +=1
+      this.data.count += 1
       this.data.time = { min, sec }
     }
 

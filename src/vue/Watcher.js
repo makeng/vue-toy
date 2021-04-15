@@ -19,14 +19,11 @@ class Watcher {
     this.newDepIds = new Set()
     this.deps = []
     this.newDeps = []
-    this.value = this.get()
-
     // parse expression for getter
-    if (typeof expOrFn === 'function') {
-      this.getter = expOrFn // for component
-    } else {
-      this.getter = parsePath(expOrFn) // for $watcher
-    }
+    this.getter = typeof expOrFn === 'function'
+      ? expOrFn // for component
+      : parsePath(expOrFn) // for $watcher
+    this.value = this.get()
   }
 
   get () {

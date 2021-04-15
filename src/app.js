@@ -11,14 +11,18 @@ const vue = new Vue({
     `
       <div>
         <h3>{{name}}</h3>
-        <p>count: {{count}}</p>
+        <p>classmate0: {{classmate[0].name}} {{classmate[0].cnt}}</p>
+        <p>classmate1: {{classmate[1].name}} {{classmate[1].cnt}}</p>
         <p>time: {{time.min}} : {{time.sec}}</p>
       </div>
     `,
   data () {
     return {
       name: 'vue-shrime',
-      count: 0,
+      classmate: [
+        { name: 'Kenny', cnt: 0 },
+        { name: 'Eren', cnt: 1 },
+      ],
       time: {
         sec: '00',
         min: '00',
@@ -35,7 +39,8 @@ const vue = new Vue({
       const min = date.getMinutes()    // 获取当前小时数(0-23)
       const sec = date.getSeconds()      // 获取当前分钟数(0-59)
 
-      this.data.count += 1
+      this.data.classmate[0].cnt += 1
+      this.data.classmate[1].cnt += 1
       this.data.time = { min, sec }
     }
 

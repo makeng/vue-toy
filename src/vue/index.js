@@ -17,14 +17,13 @@ class Vue {
     // 监听数据
     new Observer(this.data)
     // 监听属性
-    new Watcher(this, 'data.count', (vm, value) => {
+    new Watcher(this, 'data.classmate', (vm, value) => {
       this.render()
     })
     // 监听对象
     new Watcher(this, 'data.time', (vm, value) => {
       this.render()
     })
-    // 监听组件
   }
 
   render () {
@@ -36,14 +35,25 @@ class Vue {
     // 模板字符换成数据
     for (let key in data) {
       const item = this.data[key]
-      // 常量
-      if (!(typeof item === 'object')) {
-        replaceTmpl(`{{${key}}}`, item)
-      } else {
-        // 对象
-        for (let itemKey in item) {
-          replaceTmpl(`{{${key}.${itemKey}}}`, item[itemKey])
+      // 合成类型
+      if (typeof item === 'object') {
+        if (Array.isArray(item)) {
+          item.forEach((sub,index)=>{
+            for (let itemKey in sub) {
+              replaceTmpl(`{{${key}[${index}].${itemKey}}}`, sub[itemKey])
+            }
+          })
         }
+        // 对象
+        else {
+          for (let itemKey in item) {
+            replaceTmpl(`{{${key}.${itemKey}}}`, item[itemKey])
+          }
+        }
+      }
+      // 常量
+      else {
+        replaceTmpl(`{{${key}}}`, item)
       }
     }
 

@@ -10,14 +10,14 @@ import { HAS_PROTO } from '../../utils/env'
 /**
  * Augment a target Object or Array by intercepting
  */
-function protoAugment (target, src) {
+function protoAugment(target, src) {
   target.__proto__ = src
 }
 
 /**
  * 没有 __proto__ 的，直接把方法挂载到目标上作为属性
  */
-function copyAugment (target, src, keys) {
+function copyAugment(target, src, keys) {
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
     target[key] = src[key]
@@ -31,7 +31,7 @@ function copyAugment (target, src, keys) {
  * @param val 初始值。定义 getter/setter 必须自定义一个变量用于保存值，否则 get() 找不到值返回
  * @returns {*}
  */
-function defineReactive (data, key, val) {
+function defineReactive(data, key, val) {
   console.log('defineReactive', key)
   // 递归属性，进行观察
   if (typeof val === 'object') {
@@ -43,14 +43,14 @@ function defineReactive (data, key, val) {
   Object.defineProperty(data, key, {
     configurable: true,
     enumerable: true,
-    set (newVal) {
+    set(newVal) {
       if (newVal === val) {
         return
       }
       val = newVal
       dep.notify()
     },
-    get () {
+    get() {
       dep.depend()
       return val
     }
@@ -59,7 +59,7 @@ function defineReactive (data, key, val) {
 
 // 深度遍历，并用于遍历数据并挂载监听。
 class Observer {
-  constructor (value) {
+  constructor(value) {
     this.value = value
     // this.dep = new Dep() // 数组专供
 
@@ -75,7 +75,7 @@ class Observer {
   }
 
   // 把每个属性都变成 getter/setter，进行监听。此方法在类型为 Object 时才调用
-  walk (obj) {
+  walk(obj) {
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) { // 深度只有一层
       const key = keys[i]

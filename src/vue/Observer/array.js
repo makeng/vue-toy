@@ -23,7 +23,7 @@ methodsToPatch.forEach(function (method) {
     configurable: true,
     writable: true,
     enumerable: false,
-    value: function mutator (...args) {
+    value: function mutator(...args) {
       return original.apply(this, args)
     }
   })

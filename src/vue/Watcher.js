@@ -12,7 +12,7 @@ class Watcher {
    * @param expOrFn 监听的路径
    * @param cb
    */
-  constructor (vm, expOrFn, cb) {
+  constructor(vm, expOrFn, cb) {
     this.vm = vm
     this.cb = cb
     this.depIds = new Set()
@@ -26,7 +26,7 @@ class Watcher {
     this.value = this.get()
   }
 
-  get () {
+  get() {
     Dep.target = this
     const value = this.getter.call(this.vm, this.vm) // 唤起 getter
     Dep.target = undefined
@@ -35,7 +35,7 @@ class Watcher {
     return value
   }
 
-  update () {
+  update() {
     const oldValue = this.value
     this.value = this.get()
     if (this.cb) {
@@ -43,7 +43,7 @@ class Watcher {
     }
   }
 
-  addDep (dep) {
+  addDep(dep) {
     const { id } = dep
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
@@ -58,7 +58,7 @@ class Watcher {
   }
 
   // 清空所有依赖
-  cleanupDeps () {
+  cleanupDeps() {
     let i = this.deps.length
     // 如果新的依赖数组不再包含老 dep，则通知 Dep 去掉当前 Watcher
     while (i--) {

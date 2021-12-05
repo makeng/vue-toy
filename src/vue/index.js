@@ -7,9 +7,7 @@ import Observer from './Observer'
 import Watcher from './Watcher'
 
 class Vue {
-  constructor ({ data, ...conf }) {
-    const { template } = conf
-
+  constructor({ data, ...conf }) {
     // 初始化
     this.ele = undefined
     this.data = data()
@@ -26,32 +24,37 @@ class Vue {
     })
   }
 
-  render () {
+  render() {
     let { data, template } = this
     // 模板替换
-    const replaceTmpl = (tmpl, value) => {
+    function replaceTmpl(tmpl, value) {
       template = template.replace(tmpl, value)
     }
+    function replaceTmplForArray(item, key) {
+      item.forEach((sub, index) => {
+        for (let itemKey in sub) {
+          replaceTmpl(`{{${key}[${index}].${itemKey}}}`, sub[itemKey])
+        }
+      })
+    }
+    function replaceTmplForObject(item, key) {
+      for (let itemKey in item) {
+        replaceTmpl(`{{${key}.${itemKey}}}`, item[itemKey])
+      }
+    }
+
     // 模板字符换成数据
     for (let key in data) {
       const item = this.data[key]
       // 合成类型
       if (typeof item === 'object') {
         if (Array.isArray(item)) {
-          item.forEach((sub,index)=>{
-            for (let itemKey in sub) {
-              replaceTmpl(`{{${key}[${index}].${itemKey}}}`, sub[itemKey])
-            }
-          })
-        }
-        // 对象
-        else {
-          for (let itemKey in item) {
-            replaceTmpl(`{{${key}.${itemKey}}}`, item[itemKey])
-          }
+          replaceTmplForArray(item, key)
+        } else {
+          replaceTmplForObject(item, key)
         }
       }
-      // 常量
+      // 基础类型
       else {
         replaceTmpl(`{{${key}}}`, item)
       }
@@ -64,7 +67,7 @@ class Vue {
    * 安装在元素上
    * @param id
    */
-  mount (id) {
+  mount(id) {
     this.ele = document.getElementById(id)
     this.render()
     this.mounted && this.mounted()

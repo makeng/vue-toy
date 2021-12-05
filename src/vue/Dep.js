@@ -11,7 +11,7 @@ let uid = 0
  * @param arr
  * @param item
  */
-function remove (arr, item) {
+function remove(arr, item) {
   if (arr.length) {
     const index = arr.indexOf(item)
     if (index > -1) {
@@ -21,27 +21,27 @@ function remove (arr, item) {
 }
 
 class Dep {
-  constructor () {
+  constructor() {
     this.id = uid++
     this.subs = []
   }
 
-  addSub (sub) {
+  addSub(sub) {
     this.subs.push(sub)
   }
 
-  removeSub (sub) {
+  removeSub(sub) {
     remove(this.subs, sub)
   }
 
   // 依赖收集
-  depend () {
+  depend() {
     if (Dep.target) { // 如果是 watcher 的 getter
       Dep.target.addDep(this) // watcher 进入 subs
     }
   }
 
-  notify () {
+  notify() {
     const subs = this.subs.slice() // copy
     for (let i = 0; i < subs.length; i++) {
       subs[i].update()

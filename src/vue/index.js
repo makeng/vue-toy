@@ -11,17 +11,20 @@ class Vue {
     // 初始化
     this.ele = undefined
     this.data = data()
+    // 监听当前对象的某个数据
+    const watchThisProp = (propName) => {
+      return new Watcher(this, propName, (vm, value) => {
+        this.render()
+      })
+    }
+
     Object.assign(this, conf)
     // 监听数据
     new Observer(this.data)
     // 监听属性
-    new Watcher(this, 'data.classmate', (vm, value) => {
-      this.render()
-    })
-    // 监听对象
-    new Watcher(this, 'data.time', (vm, value) => {
-      this.render()
-    })
+    watchThisProp('data.classmate')
+    watchThisProp('data.time')
+    watchThisProp('data.list')
   }
 
   render() {

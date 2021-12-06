@@ -4,8 +4,8 @@
 * date:2021-03-07
 * ---------------------------------------------------------------------------------------- */
 
-const HAS_PROTO = '__proto__' in {}
+const GLOBAL_HAS_PROTO = '__proto__' in {}
 
 export {
-  HAS_PROTO
+  GLOBAL_HAS_PROTO
 }

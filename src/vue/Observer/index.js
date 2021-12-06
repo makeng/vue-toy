@@ -5,7 +5,43 @@
 * ---------------------------------------------------------------------------------------- */
 import Dep from '../Dep'
 import { arrayMethods } from './array'
-import { HAS_PROTO } from '../../utils/env'
+import { GLOBAL_HAS_PROTO } from '../../utils/env'
+
+
+// 深度遍历，并用于遍历数据并挂载监听。
+class Observer {
+  constructor(value) {
+    this.value = value
+    // this.dep = new Dep() // 数组专供
+
+    // 如果是数组，用别的处理方式
+    if (Array.isArray(value)) {
+      const augment = GLOBAL_HAS_PROTO
+        ? protoAugment
+        : copyAugment
+      augment(value, arrayMethods, Object.getOwnPropertyNames(arrayMethods))
+      this.observeArray(value)
+    } else {
+      this.walk(value)
+    }
+  }
+
+  // 把每个属性都变成 getter/setter，进行监听。此方法在类型为 Object 时才调用
+  walk(obj) {
+    const keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
+      defineReactive(obj, key, obj[key])
+    }
+  }
+
+  // 对数组的监听
+  observeArray(arr) {
+    for (const item of arr) {
+      new Observer(item)
+    }
+  }
+}
 
 /**
  * Augment a target Object or Array by intercepting
@@ -32,7 +68,6 @@ function copyAugment(target, src, keys) {
  * @returns {*}
  */
 function defineReactive(data, key, val) {
-  console.log('defineReactive', key)
   // 递归属性，进行观察
   if (typeof val === 'object') {
     new Observer(val)
@@ -48,40 +83,13 @@ function defineReactive(data, key, val) {
         return
       }
       val = newVal
-      dep.notify()
+      dep.notify() // 变化时候通知
     },
     get() {
-      dep.depend()
+      dep.depend() // 收集变化
       return val
     }
   })
-}
-
-// 深度遍历，并用于遍历数据并挂载监听。
-class Observer {
-  constructor(value) {
-    this.value = value
-    // this.dep = new Dep() // 数组专供
-
-    // 如果是数组，用别的处理方式
-    if (Array.isArray(value)) {
-      const augment = HAS_PROTO
-        ? protoAugment
-        : copyAugment
-      augment(value, arrayMethods, Object.getOwnPropertyNames(arrayMethods))
-    } else {
-      this.walk(value)
-    }
-  }
-
-  // 把每个属性都变成 getter/setter，进行监听。此方法在类型为 Object 时才调用
-  walk(obj) {
-    const keys = Object.keys(obj)
-    for (let i = 0; i < keys.length; i++) { // 深度只有一层
-      const key = keys[i]
-      defineReactive(obj, key, obj[key])
-    }
-  }
 }
 
 export default Observer

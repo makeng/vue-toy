@@ -6,6 +6,7 @@
 
 import Vue from './vue'
 
+let timer = 0
 const vue = new Vue({
   template:
     `
@@ -50,9 +51,10 @@ const vue = new Vue({
       }
     }
 
-    setInterval(() => {
+    clearInterval(timer)
+    timer = setInterval(() => {
       updateTime()
-      updateClassmateList()
+      // updateClassmateList()
     }, 1000)
   }
 })

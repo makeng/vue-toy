@@ -6,18 +6,24 @@
 import Dep from '../Dep'
 import { arrayMethods } from './array'
 import { GLOBAL_HAS_PROTO } from '../../utils/env'
+import { isObject } from '../../utils/object'
 
+const OBSERVE_KEY = '__ob__'
 
 // 深度遍历，并用于遍历数据并挂载监听。
 class Observer {
   constructor(value) {
     this.value = value
 
+    if (isObject(value)) {
+      value[OBSERVE_KEY] = this
+    } else {
+      return
+    }
+
     // 如果是数组，用别的处理方式
     if (Array.isArray(value)) {
-      const augment = GLOBAL_HAS_PROTO
-        ? protoAugment
-        : copyAugment
+      const augment = GLOBAL_HAS_PROTO ? protoAugment : copyAugment
       augment(value, arrayMethods, Object.getOwnPropertyNames(arrayMethods))
       this.observeArray(value)
     } else {
@@ -66,24 +72,18 @@ function copyAugment(target, src, keys) {
  */
 function defineReactive(data, key, val) {
   // 递归属性，进行观察
-  if (typeof val === 'object') {
-    observe(val)
-  }
+  observe(val)
 
   // 挂载
   const dep = new Dep() // 变化收集器
   Object.defineProperty(data, key, {
-    configurable: true,
-    enumerable: true,
-    set(newVal) {
+    configurable: true, enumerable: true, set(newVal) {
       if (newVal === val) {
         return
       }
       val = newVal
-      console.log('notify', val)
       dep.notify() // 变化时候通知
-    },
-    get() {
+    }, get() {
       dep.depend() // 收集变化
       return val
     }
@@ -91,5 +91,15 @@ function defineReactive(data, key, val) {
 }
 
 export function observe(target) {
-  return new Observer(target)
+  if (!isObject(target)) {
+    return
+  }
+
+  let ob
+  if (OBSERVE_KEY in target || target instanceof Observer) {
+    ob = target[OBSERVE_KEY]
+  } else {
+    ob = new Observer(target)
+  }
+  return ob
 }

@@ -3,7 +3,7 @@
 * author:马兆铿（13790371603 810768333@qq.com）
 * date:2021-03-04
 * ---------------------------------------------------------------------------------------- */
-import Observer from './Observer'
+import Observer, { observe } from './Observer'
 import Watcher from './Watcher'
 
 class Vue {
@@ -12,20 +12,24 @@ class Vue {
     this.ele = undefined
     this.data = data()
     // 监听当前对象的某个数据
-    const watchThisProp = (propName) => {
+    const watchThisProp = (subPropName) => {
+      const propName = `data.${subPropName}`
       return new Watcher(this, propName, (vm, value) => {
-        this.render()
+        this.render() // 侦测到变化，就更新
       })
     }
 
     Object.assign(this, conf)
     // 监听数据
-    new Observer(this.data)
+    observe(this.data)
     // 监听属性
-    watchThisProp('data.classmate')
-    watchThisProp('data.time')
-    watchThisProp('data.list')
+    for (const key in this.data) {
+      watchThisProp(key)
+    }
   }
+
+  // 初始化生命周期
+  mounted() {}
 
   render() {
     let { data, template } = this
@@ -73,7 +77,7 @@ class Vue {
   mount(id) {
     this.ele = document.getElementById(id)
     this.render()
-    this.mounted && this.mounted()
+    this.mounted && this.mounted() // 手动生命周期
   }
 }
 

@@ -10,27 +10,25 @@ const vue = new Vue({
   template:
     `
       <div>
-        <h3>{{name}}</h3>
-        <p>classmate0: {{classmate[0].name}} {{classmate[0].cnt}}</p>
-        <p>classmate1: {{classmate[1].name}} {{classmate[1].cnt}}</p>
+        <h1>{{name}}</h1>
+        <h2>object update</h2>
         <p>time: {{time.min}} : {{time.sec}}</p>
-        <p>list: [{{list[0].value}}, {{list[1].value}}]</p>
+        
+        <h2>array update</h2>
+        <p>classmateList[0]: {{classmateList[0].name}} {{classmateList[0].cnt}}</p>
+        <p>classmateList[1]: {{classmateList[1].name}} {{classmateList[1].cnt}}</p>
       </div>
     `,
   data() {
     return {
-      name: 'vue-shrime',
-      classmate: [
-        { name: 'Kenny', cnt: 0 },
-        { name: 'Eren', cnt: 1 },
-      ],
+      name: 'vue-toy',
       time: {
         sec: '00',
         min: '00',
       },
-      list: [
-        { key: 0, value: 0 },
-        { key: 1, value: 0 },
+      classmateList: [
+        { name: 'Kenny', cnt: 0 },
+        { name: 'Eren', cnt: 1 },
       ]
     }
   },
@@ -46,20 +44,15 @@ const vue = new Vue({
 
       this.data.time = { min, sec }
     }
-    const updateClassmate = () => {
-      this.data.classmate[0].cnt += 1
-      this.data.classmate[1].cnt += 1
-    }
-    const updateList = () => {
-      for (const item of this.data.list) {
-        item.value += 1
+    const updateClassmateList = () => {
+      for (const item of this.data.classmateList) {
+        item.cnt += 1
       }
     }
 
     setInterval(() => {
       updateTime()
-      updateClassmate()
-      updateList()
+      updateClassmateList()
     }, 1000)
   }
 })

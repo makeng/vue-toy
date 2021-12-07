@@ -12,7 +12,6 @@ import { GLOBAL_HAS_PROTO } from '../../utils/env'
 class Observer {
   constructor(value) {
     this.value = value
-    // this.dep = new Dep() // 数组专供
 
     // 如果是数组，用别的处理方式
     if (Array.isArray(value)) {
@@ -29,8 +28,7 @@ class Observer {
   // 把每个属性都变成 getter/setter，进行监听。此方法在类型为 Object 时才调用
   walk(obj) {
     const keys = Object.keys(obj)
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
+    for (const key of keys) {
       defineReactive(obj, key, obj[key])
     }
   }
@@ -38,7 +36,7 @@ class Observer {
   // 对数组的监听
   observeArray(arr) {
     for (const item of arr) {
-      new Observer(item)
+      observe(item)
     }
   }
 }
@@ -54,8 +52,7 @@ function protoAugment(target, src) {
  * 没有 __proto__ 的，直接把方法挂载到目标上作为属性
  */
 function copyAugment(target, src, keys) {
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
+  for (const key of keys) {
     target[key] = src[key]
   }
 }
@@ -70,7 +67,7 @@ function copyAugment(target, src, keys) {
 function defineReactive(data, key, val) {
   // 递归属性，进行观察
   if (typeof val === 'object') {
-    new Observer(val)
+    observe(val)
   }
 
   // 挂载
@@ -83,6 +80,7 @@ function defineReactive(data, key, val) {
         return
       }
       val = newVal
+      console.log('notify', val)
       dep.notify() // 变化时候通知
     },
     get() {
@@ -92,4 +90,6 @@ function defineReactive(data, key, val) {
   })
 }
 
-export default Observer
+export function observe(target) {
+  return new Observer(target)
+}

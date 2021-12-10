@@ -14,12 +14,7 @@ const OBSERVE_KEY = '__ob__'
 class Observer {
   constructor(value) {
     this.value = value
-
-    if (isObject(value)) {
-      value[OBSERVE_KEY] = this
-    } else {
-      return
-    }
+    value[OBSERVE_KEY] = this // 相互挂接
 
     // 如果是数组，用别的处理方式
     if (Array.isArray(value)) {
@@ -35,7 +30,7 @@ class Observer {
   walk(obj) {
     const keys = Object.keys(obj)
     for (const key of keys) {
-      defineReactive(obj, key, obj[key])
+      defineReactive(obj, key, obj[key]) // 针对的是对象的属性，不是对象本身
     }
   }
 
@@ -72,7 +67,7 @@ function copyAugment(target, src, keys) {
  */
 function defineReactive(data, key, val) {
   // 递归属性，进行观察
-  observe(val)
+  // observe(val)
 
   // 挂载
   const dep = new Dep() // 变化收集器
@@ -90,16 +85,18 @@ function defineReactive(data, key, val) {
   })
 }
 
-export function observe(target) {
-  if (!isObject(target)) {
+export function observe(value) {
+  console.log('observe value', value)
+  if (!isObject(value)) {
     return
   }
 
   let ob
-  if (OBSERVE_KEY in target || target instanceof Observer) {
-    ob = target[OBSERVE_KEY]
+  // 已经被观察
+  if (value[OBSERVE_KEY] && value[OBSERVE_KEY] instanceof Observer) {
+    ob = value[OBSERVE_KEY]
   } else {
-    ob = new Observer(target)
+    ob = new Observer(value)
   }
   return ob
 }

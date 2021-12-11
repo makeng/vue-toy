@@ -66,19 +66,23 @@ function copyAugment(target, src, keys) {
  * @returns {*}
  */
 function defineReactive(data, key, val) {
+  console.log('defineReactive key', key, val)
   // 递归属性，进行观察
-  // observe(val)
+  observe(val)
 
   // 挂载
   const dep = new Dep() // 变化收集器
   Object.defineProperty(data, key, {
-    configurable: true, enumerable: true, set(newVal) {
+    configurable: true, enumerable: true,
+    set(newVal) {
       if (newVal === val) {
         return
       }
       val = newVal
+      console.log('set key', key)
       dep.notify() // 变化时候通知
-    }, get() {
+    },
+    get() {
       dep.depend() // 收集变化
       return val
     }
@@ -86,16 +90,17 @@ function defineReactive(data, key, val) {
 }
 
 export function observe(value) {
-  console.log('observe value', value)
-  if (!isObject(value)) {
+  if (!isObject(value) || value instanceof Observer) {
     return
   }
 
   let ob
   // 已经被观察
   if (value[OBSERVE_KEY] && value[OBSERVE_KEY] instanceof Observer) {
+    console.log('value[OBSERVE_KEY]', value[OBSERVE_KEY])
     ob = value[OBSERVE_KEY]
   } else {
+    console.log('new Observer', value)
     ob = new Observer(value)
   }
   return ob

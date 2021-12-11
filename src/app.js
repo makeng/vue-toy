@@ -43,7 +43,8 @@ const vue = new Vue({
       const min = date.getMinutes()    // 获取当前小时数(0-23)
       const sec = date.getSeconds()    // 获取当前分钟数(0-59)
 
-      this.data.time = { min, sec }
+      this.data.time.min = min // 深层次也能监听
+      this.data.time.sec = sec
     }
     const updateClassmateList = () => {
       for (const item of this.data.classmateList) {
@@ -54,7 +55,7 @@ const vue = new Vue({
     clearInterval(timer)
     timer = setInterval(() => {
       updateTime()
-      //updateClassmateList()
+      // updateClassmateList()
     }, 1000)
   }
 })

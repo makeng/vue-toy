@@ -79,11 +79,12 @@ function defineReactive(data, key, val) {
         return
       }
       val = newVal
-      console.log('set key', key)
+      console.log('key notify: ', key)
       dep.notify() // 变化时候通知
     },
     get() {
       dep.depend() // 收集变化
+      console.log('key depend: ', key)
       return val
     }
   })

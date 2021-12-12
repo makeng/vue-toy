@@ -10,20 +10,22 @@ class Watcher {
   /**
    * @param vm 渲染模板
    * @param expOrFn 监听的路径
-   * @param cb
+   * @param cb 回调
    */
   constructor(vm, expOrFn, cb) {
-    this.vm = vm
+    this.vm = vm // 挂接目标是组件
     this.cb = cb
+    // dep 相关
     this.depIds = new Set()
     this.newDepIds = new Set()
     this.deps = []
     this.newDeps = []
+
     // parse expression for getter
     this.getter = typeof expOrFn === 'function'
       ? expOrFn // for component
       : parsePath(expOrFn) // for $watcher
-    this.value = this.get()
+    this.value = this.get() // dep.depend()
   }
 
   get() {

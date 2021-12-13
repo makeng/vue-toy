@@ -3,8 +3,10 @@
 * author:马兆铿（13790371603 810768333@qq.com）
 * date:2021-03-04
 * ---------------------------------------------------------------------------------------- */
-import Observer, { observe } from './Observer'
+import { observe, OBSERVE_KEY } from './Observer'
 import Watcher from './Watcher'
+import { isObject } from '../utils/object'
+import { parsePath } from '../utils/string'
 
 class Vue {
   constructor({ data, ...conf }) {
@@ -12,19 +14,35 @@ class Vue {
     this.ele = undefined
     this.data = data()
     // 监听当前对象的某个数据
-    const watchThisProp = (subPropName) => {
-      const propName = `data.${subPropName}`
-      return new Watcher(this, propName, (vm, value) => {
-        this.render() // 侦测到变化，就更新
-      })
+    const watchProp = (target, propName, cb) => {
+
+      if (typeof propName === 'string') {
+        const getter = parsePath(propName) // 产生函数
+        const value = getter(target)
+
+        if (isObject(value)) {
+          for (const key in value) {
+            if (key !== OBSERVE_KEY) {
+              watchProp(target, `${propName}.${key}`, cb)
+            }
+          }
+        }
+      }
+      return new Watcher(target, propName, cb)
     }
 
     Object.assign(this, conf)
     // 监听数据
     observe(this.data)
     // 监听属性
+    console.log('this.data', this.data)
     for (const key in this.data) {
-      watchThisProp(key)
+      if (key !== OBSERVE_KEY) {
+        const propName = `data.${key}`
+        watchProp(this, propName, (vm, value) => {
+          this.render() // 侦测到变化，就更新
+        })
+      }
     }
   }
 

@@ -8,7 +8,7 @@ import { arrayMethods } from './array'
 import { GLOBAL_HAS_PROTO } from '../../utils/env'
 import { isObject } from '../../utils/object'
 
-const OBSERVE_KEY = '__ob__'
+export const OBSERVE_KEY = '__ob__'
 
 // 深度遍历，并用于遍历数据并挂载监听。
 class Observer {
@@ -66,7 +66,6 @@ function copyAugment(target, src, keys) {
  * @returns {*}
  */
 function defineReactive(data, key, val) {
-  console.log('defineReactive key', key, val)
   // 递归属性，进行观察
   observe(val)
 
@@ -79,12 +78,10 @@ function defineReactive(data, key, val) {
         return
       }
       val = newVal
-      console.log('key notify: ', key)
       dep.notify() // 变化时候通知
     },
     get() {
       dep.depend() // 收集变化
-      console.log('key depend: ', key)
       return val
     }
   })
@@ -98,10 +95,8 @@ export function observe(value) {
   let ob
   // 已经被观察
   if (value[OBSERVE_KEY] && value[OBSERVE_KEY] instanceof Observer) {
-    console.log('value[OBSERVE_KEY]', value[OBSERVE_KEY])
     ob = value[OBSERVE_KEY]
   } else {
-    console.log('new Observer', value)
     ob = new Observer(value)
   }
   return ob

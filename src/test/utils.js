@@ -9,5 +9,4 @@ import { parsePath } from '../utils/string'
 /* ----------------------------------------- string ----------------------------------------- */
 // parsePath
 const obj = { a: { b: { c: 'inside' } } }
-const getPath = parsePath('a.b.c') // 产生函数
-console.log(getPath(obj)) // 'inside'
+const getter = parsePath('a.b.c') // 产生函数

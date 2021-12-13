@@ -56,7 +56,6 @@ class Watcher {
       }
     }
     const len = this.newDepIds.size
-    console.log('Watcher newDepIds', len)
   }
 
   // 清空所有依赖
@@ -81,7 +80,6 @@ class Watcher {
     this.newDeps.length = 0
 
     const len = this.depIds.size
-    console.log('Watcher dpeIds', len)
   }
 }
 

@@ -15,16 +15,16 @@ class Vue {
     this.data = data()
     // 监听当前对象的某个数据
     const watchProp = (target, propName, cb) => {
+      if (propName.includes(OBSERVE_KEY)) {
+        return
+      }
+      const getter = parsePath(propName) // 产生函数
+      const value = getter(target)
 
-      if (typeof propName === 'string') {
-        const getter = parsePath(propName) // 产生函数
-        const value = getter(target)
-
-        if (isObject(value)) {
-          for (const key in value) {
-            if (key !== OBSERVE_KEY) {
-              watchProp(target, `${propName}.${key}`, cb)
-            }
+      if (isObject(value)) {
+        for (const key in value) {
+          if (key !== OBSERVE_KEY) {
+            watchProp(target, `${propName}.${key}`, cb)
           }
         }
       }
@@ -37,12 +37,10 @@ class Vue {
     // 监听属性
     console.log('this.data', this.data)
     for (const key in this.data) {
-      if (key !== OBSERVE_KEY) {
-        const propName = `data.${key}`
-        watchProp(this, propName, (vm, value) => {
-          this.render() // 侦测到变化，就更新
-        })
-      }
+      const propName = `data.${key}`
+      watchProp(this, propName, (vm, value) => {
+        this.render() // 侦测到变化，就更新
+      })
     }
   }
 

@@ -54,8 +54,8 @@ const vue = new Vue({
 
     clearInterval(timer)
     timer = setInterval(() => {
-      updateTime()
-      // updateClassmateList()
+      // updateTime()
+      updateClassmateList()
     }, 1000)
   }
 })

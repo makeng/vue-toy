@@ -15,10 +15,13 @@ class Observer {
   constructor(value) {
     this.value = value
     value[OBSERVE_KEY] = this // 相互挂接
+    this.dep = new Dep() // for array
 
     // 如果是数组，用别的处理方式
     if (Array.isArray(value)) {
-      const augment = GLOBAL_HAS_PROTO ? protoAugment : copyAugment
+      const augment = GLOBAL_HAS_PROTO
+        ? protoAugment
+        : copyAugment
       augment(value, arrayMethods, Object.getOwnPropertyNames(arrayMethods))
       this.observeArray(value)
     } else {

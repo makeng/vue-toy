@@ -3,9 +3,10 @@
 * author:马兆铿（13790371603 810768333@qq.com）
 * date:2021-03-07
 * ---------------------------------------------------------------------------------------- */
+import { def } from '../../utils/lang'
 
 const arrayProto = Array.prototype
-const arrayMethods = Object.create(arrayProto) // 复制原型用于改造，避免直接改造原型
+const arrayMethods = Object.create(arrayProto) // 避免直接改造原型，但是同时能还能用原型的方法
 
 const methodsToPatch = [
   'shift',
@@ -19,13 +20,11 @@ const methodsToPatch = [
 
 methodsToPatch.forEach(function (method) {
   const original = arrayProto[method]
-  Object.defineProperty(arrayMethods, method, {
-    configurable: true,
-    writable: true,
-    enumerable: false,
-    value: function mutator(...args) {
-      return original.apply(this, args)
-    }
+  def(arrayMethods, method, function mutator(...args) {
+    const result = original.apply(this, ...args)
+    const ob = this.__ob__
+    ob.dep.notify()
+    return result
   })
 })
 

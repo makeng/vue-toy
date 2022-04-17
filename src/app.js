@@ -47,9 +47,12 @@ const vue = new Vue({
       this.data.time.sec = sec
     }
     const updateClassmateList = () => {
+      // 改变值
       for (const item of this.data.classmateList) {
         item.cnt += 1
       }
+      // 改变元素数量
+      this.data.classmateList.reverse()
     }
 
     clearInterval(timer)
